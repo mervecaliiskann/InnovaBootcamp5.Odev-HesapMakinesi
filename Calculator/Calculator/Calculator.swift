@@ -12,7 +12,7 @@ class Calculator: UIViewController {
     
     var firstNumber: Double = 0
     var currentNumber: Double = 0
-    
+    var performingOperation = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,10 +20,15 @@ class Calculator: UIViewController {
         
     }
     func inputNumber(number: String) {
-        if startLabel.text == "0" || startLabel.text == String(firstNumber) {
+        if performingOperation {
             startLabel.text = number
+            performingOperation = false
         } else {
-            startLabel.text = startLabel.text! + number
+            if startLabel.text == "0" {
+                startLabel.text = number
+            } else {
+                startLabel.text = startLabel.text! + number
+            }
         }
         currentNumber = Double(startLabel.text!) ?? 0
     }
@@ -64,24 +69,19 @@ class Calculator: UIViewController {
     }
     @IBAction func equalsButton(_ sender: Any) {
         let result = firstNumber + currentNumber
-               displayResult(result)
+        startLabel.text = String(result)
+        performingOperation = false
     }
     @IBAction func ACButton(_ sender: Any) {
         startLabel.text = "0"
         firstNumber = 0
         currentNumber = 0
-        
+        performingOperation = false
     }
     @IBAction func plusButton(_ sender: Any) {
         firstNumber = Double(startLabel.text!) ?? 0
-               startLabel.text = "0"
+        performingOperation = true
     }
-    func displayResult(_ result: Double) {
-        if result.truncatingRemainder(dividingBy: 1) == 0 {
-            startLabel.text = String(Int(result))
-        } else {
-            startLabel.text = String(result)
-        }
-    }
+    
 }
 
